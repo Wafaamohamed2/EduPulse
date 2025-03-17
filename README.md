@@ -6,8 +6,8 @@
      
 # Features
   1- Attendance Management :
-     * - Record student attendance using a unique FingerId.
-     * - Calculate absence rates for students over a specified period.
+       - Record student attendance using a unique FingerId.
+       - Calculate absence rates for students over a specified period.
 
   2- Exam Management :
       - Create and manage exams with questions and answers.
