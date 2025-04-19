@@ -1,6 +1,8 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using EduPulse.Models.Users;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 
@@ -8,18 +10,29 @@ namespace SW_Project.Models
 {
     public class Attendence
     {
+        
         public int Id { get; set; }
+        [Required, DataType(DataType.Date)]
         public DateTime Date { get; set; }
         public bool IsPresent { get; set; }
-
+[Required]
         public string? FingerId { get; set; }
 
         private readonly SW_Entity _context;
-
+       
         public Attendence(SW_Entity context)
         {
             _context = context;
-        } 
+        }
+
+
+       
+
+        
+
+      
+       
+
 
 
         // Method to record attendance for a student

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SW_Project.Models;
 
 namespace SW_Project.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
     public class StudentController : Controller
@@ -19,8 +21,13 @@ namespace SW_Project.Controllers
         [HttpPost("record-attendance")]
         public IActionResult RecordAttendance([FromBody] AttendanceRequest request)
         {
+
+            if (string.IsNullOrEmpty(request.FingerId))
+                return BadRequest("FingerId is required");
+
+
             // check if student has fingerid record , if the fingerId is invalid 
-            var student = _context.Students.FirstOrDefault(s => s.FingerId == request.FingerId);
+            var student = _context.Students.AsNoTracking().FirstOrDefault(s => s.FingerId == request.FingerId);
             if (student == null)
             {
                 return NotFound("Student not found.");
@@ -28,7 +35,7 @@ namespace SW_Project.Controllers
 
             var attendance = new AttendenceRecord
             {
-                Id = student.Id,
+              
                 TeacherId = request.TeacherId,
                 AttendenceDate = DateTime.Now,
                 IsPresent = request.IsPresent,
@@ -38,7 +45,7 @@ namespace SW_Project.Controllers
             _context.AttendenceRecords.Add(attendance);
             _context.SaveChanges();
 
-            return Ok();
+            return Ok(new { message = "Attendance recorded" });
         }
 
 
@@ -76,6 +83,10 @@ namespace SW_Project.Controllers
 
         #endregion
 
+
+
+
+       
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using SW_Project.Models;
+using EduPulse.Models.Users;
+using EduPulse.Models.Exam_Sub;
 namespace SW_Project.Models
 {
     public class SW_Entity : DbContext
