@@ -1,4 +1,7 @@
-﻿namespace SW_Project.Models
+﻿using EduPulse.Models.Exam_Sub;
+using SW_Project.Models;
+
+namespace EduPulse.Models.Users
 {
     public class Student : IUser
     {
@@ -8,7 +11,7 @@
         public string? FingerId { get; set; }
 
         public string Name { get; set; } = string.Empty;
-        public string Email { get; set; }  = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Confirm_Password { get; set; } = string.Empty;
         public int Grade { get; set; }
@@ -24,7 +27,7 @@
         public Student()
         {
         }
-        public Student(int id ,string name ,string email , string password,int grade, string subject, int level, int absences)
+        public Student(int id, string name, string email, string password, int grade, string subject, int level, int absences)
         {
             Id = id;
             Name = name;
@@ -42,7 +45,7 @@
         #region
         public bool Login(string email, string password)
         {
-            if (this.Email == email && this.Password == password)
+            if (Email == email && Password == password)
             {
                 Console.WriteLine(" login successful!");
                 return true;
@@ -55,9 +58,9 @@
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
-                this.Name = name;
-                this.Email = email;
-                this.Password = password;
+                Name = name;
+                Email = email;
+                Password = password;
                 Console.WriteLine(" signup successful!");
                 return true;
             }
@@ -76,7 +79,7 @@
                 $"Time Limit : {exam.TimeLimitInMinutes} minutes , Total questions: {exam.QuestionsCount} ");
 
 
-      
+
 
         }
         public int Preview_Quiz(Exam exam)
@@ -104,7 +107,7 @@
             for (int i = 0; i < exam.Questions.Count; i++)
             {
                 Console.WriteLine($"Question {i + 1}: {exam.Questions[i]}");
-              
+
             }
 
             Console.WriteLine("Exam Finshed.");
@@ -114,9 +117,9 @@
 
 
 
-        public  void ViewStdInf()
+        public void ViewStdInf()
         {
-            Console.WriteLine($"Student Info: ID={this.Id}, Name={this.Name}, Level={this.Level}");
+            Console.WriteLine($"Student Info: ID={Id}, Name={Name}, Level={Level}");
         }
 
 
@@ -126,7 +129,7 @@
         #region
         // one to one relationship with parent
 
-        public Parent? parent { get; set; } = new Parent();
+        public Parent? parent { get; set; } 
 
         // one to many relationship with attendence
         public ICollection<Attendence> Attendances { get; set; } = new List<Attendence>();

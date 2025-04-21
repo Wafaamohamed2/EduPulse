@@ -1,4 +1,6 @@
-﻿namespace SW_Project.Models
+﻿using EduPulse.Models.Users;
+
+namespace EduPulse.Models.Exam_Sub
 {
     public class Exam
     {
@@ -12,34 +14,37 @@
         public List<string> Answers { get; set; } = new List<string>();
         public int QuestionsCount => Questions.Count;
         #endregion
+        public string? examName { get; set; }
 
-       public Exam() { }
-        public Exam(string examname , int examtime) {
-        
-          ExamName = examname;
-          TimeLimitInMinutes = examtime;
+         public Exam() { }
+        public Exam(string examname, int examtime)
+        {
+
+            ExamName = examname;
+            TimeLimitInMinutes = examtime;
         }
 
 
 
-        public void AddQuestion(string question , string answer)
+        public void AddQuestion(string question, string answer)
         {
             Questions.Add(question);
             Answers.Add(answer);
         }
-        public void RemoveQuestion(string question) {
+        public void RemoveQuestion(string question)
+        {
             int index = Questions.IndexOf(question);
-            if (index >0)
+            if (index > 0)
             {
                 Questions.RemoveAt(index);
                 Answers.RemoveAt(index);  //remove the answer with the question
             }
 
-           
+
         }
 
 
         //many to many relationship with student
-        public ICollection<Student> Students { get; set; } = new List<Student>();   
+        public ICollection<Student> Students { get; set; } = new List<Student>();
     }
 }

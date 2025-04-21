@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using SW_Project.Models;
+using EduPulse.Models.Users;
+using EduPulse.Models.Exam_Sub;
 namespace SW_Project.Models
 {
     public class SW_Entity : DbContext
@@ -44,7 +45,6 @@ namespace SW_Project.Models
              .HasOne(a => a.Student)
              .WithMany(s => s.Attendances)
              .HasForeignKey(a => a.studentId);
-
 
             modelBuilder.Entity<Parent>()
             .HasOne(p => p.student)

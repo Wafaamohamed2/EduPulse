@@ -1,6 +1,7 @@
-﻿using SW_Project.Models;
+﻿using EduPulse.Models.Exam_Sub;
+using SW_Project.Models;
 
-namespace SW_Project.Models
+namespace EduPulse.Models.Users
 {
     public class Teacher : IUser
     {
@@ -20,7 +21,7 @@ namespace SW_Project.Models
         public bool Login(string email, string password)
         {
 
-            if (this.Email == email && this.Password == password)
+            if (Email == email && Password == password)
             {
                 Console.WriteLine("login successful!");
                 return true;
@@ -28,15 +29,15 @@ namespace SW_Project.Models
             Console.WriteLine("login failed!");
             return false;
         }
-       
+
 
         public bool SignUp(string name, string email, string password)
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
-                this.Name = name;
-                this.Email = email;
-                this.Password = password;
+                Name = name;
+                Email = email;
+                Password = password;
                 Console.WriteLine("signup successful!");
                 return true;
             }
@@ -48,19 +49,19 @@ namespace SW_Project.Models
 
         // Teacher Methods
         #region
-        public Exam Create_Quiz(string examName , int ExameTime , List<(string Question, string Answer)> questionsWithAnswers)
+        public Exam Create_Quiz(string examName, int ExameTime, List<(string Question, string Answer)> questionsWithAnswers)
         {
-           var exam = new Exam(examName, ExameTime);
+            var exam = new Exam(examName, ExameTime);
             foreach (var question in questionsWithAnswers)
             {
-                exam.AddQuestion(question.Question , question.Answer);
+                exam.AddQuestion(question.Question, question.Answer);
             }
 
-            Console.WriteLine($"Quiz {examName} created successfully with {exam.QuestionsCount} questions " );
+            Console.WriteLine($"Quiz {examName} created successfully with {exam.QuestionsCount} questions ");
             return exam;
         }
 
-        public void SaveExamToDB(SW_Entity context , Exam exam)
+        public void SaveExamToDB(SW_Entity context, Exam exam)
         {
             context.Exams.Add(exam);
             context.SaveChanges();

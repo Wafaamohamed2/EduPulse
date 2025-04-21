@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace SW_Project.Models
+namespace EduPulse.Models.Users
 {
     public class Parent : IUser
     {
-       
+
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -14,7 +14,7 @@ namespace SW_Project.Models
         public string Confirm_Password { get; set; } = string.Empty;
         public bool Login(string email, string password)
         {
-            if (this.Email == email && this.Password == password)
+            if (Email == email && Password == password)
             {
                 Console.WriteLine(" login successful!");
                 return true;
@@ -27,9 +27,9 @@ namespace SW_Project.Models
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
-                this.Name = name;
-                this.Email = email;
-                this.Password = password;
+                Name = name;
+                Email = email;
+                Password = password;
                 Console.WriteLine(" signup successful!");
                 return true;
             }
@@ -38,18 +38,19 @@ namespace SW_Project.Models
         }
 
 
-       
+
         public void ViewSonInf()
         {
-            if (this.student != null) { 
-                this.student.ViewStdInf();
+            if (student != null)
+            {
+                student.ViewStdInf();
             }
             else
             {
                 Console.WriteLine("No student information available.");
             }
         }
-        
+
 
         public string NotifyAboutGrades(string message)
         {
@@ -57,10 +58,10 @@ namespace SW_Project.Models
         }
 
 
-      
+
         // one to one relationship with student
         public int studentId { get; set; }  // foreign key
-        public Student student { get; set;} = new Student();
-     
+        public Student student { get; set; } = new Student();
+
     }
 }

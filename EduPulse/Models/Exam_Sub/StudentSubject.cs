@@ -1,4 +1,6 @@
-﻿namespace SW_Project.Models
+﻿using EduPulse.Models.Users;
+
+namespace EduPulse.Models.Exam_Sub
 {
     public class StudentSubject
     {

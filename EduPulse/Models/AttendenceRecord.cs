@@ -1,4 +1,6 @@
-﻿namespace SW_Project.Models
+﻿using EduPulse.Models.Users;
+
+namespace SW_Project.Models
 {
     public class AttendenceRecord
     {

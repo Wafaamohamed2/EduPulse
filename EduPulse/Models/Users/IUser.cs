@@ -1,6 +1,6 @@
-﻿namespace SW_Project.Models
+﻿namespace EduPulse.Models.Users
 {
-     interface IUser
+   public interface IUser
     {
         int Id { get; set; }
         string Name { get; set; }
