@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SW_Project.Models;
 using System.Text;
 using EduPulse.Services;
+using EduPulse.Models.Exam_Sub;
 using EduPulse.Models.Services;
+using SW_Project.Migrations;
 
 public class Program
 {
@@ -43,8 +45,17 @@ public class Program
 
 
         // email service
-        builder.Services.AddSingleton<EmailService>();
+        builder.Services.AddSingleton<IEmailService, EmailService>();
+
         builder.Services.AddSingleton<NotificationService>();
+
+        builder.Services.AddSingleton<IExamSystem>(provider =>
+        {
+            var config = provider.GetRequiredService<IConfiguration>();
+            var googleFormUrl = config["ExamSystem:GoogleFormUrl"];
+            return new GoogleFormsExamAdapter(googleFormUrl);
+        });
+
 
 
 

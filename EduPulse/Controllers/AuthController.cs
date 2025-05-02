@@ -19,8 +19,7 @@ namespace EduPulse.Models.Users
         private readonly IConfiguration _configuration;
         private readonly NotificationService _notificationService;
 
-
-        // Registration Services "used to separate se"
+        // Registration Services
         private readonly StudentRegistrationService _studentRegistrationService;
         private readonly TeacherRegistrationService _teacherRegistrationService;
         private readonly ParentRegistrationService _parentRegistrationService;
@@ -50,38 +49,7 @@ namespace EduPulse.Models.Users
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
-        // Generate JWT Token
-        private string GenerateJwtToken(IUser user)
-        {
-            var jwtKey = _configuration["Jwt:Key"];
-
-            if (string.IsNullOrEmpty(jwtKey))
-            {
-                throw new InvalidOperationException("JWT Key is missing in the configuration.");
-            }
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, user.GetType().Name)
-        };
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddDays(30),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        // login
+        // Login
         #region
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
@@ -93,12 +61,15 @@ namespace EduPulse.Models.Users
             if (user == null || string.IsNullOrWhiteSpace(loginDto.Password) || !VerifyPassword(loginDto.Password, user.Password))
                 return Unauthorized("Invalid Information");
 
-            var token = GenerateJwtToken(user);
+            // Use the Singleton JwtTokenGenerator
+            var token = JwtTokenGenerator.GetInstance(_configuration).GenerateJwtToken(user);
+
             return Ok(new { Token = token, UserType = user.GetType().Name });
         }
         #endregion
 
-        // student register
+
+        // Student Register
         #region
         [HttpPost("student")]
         public async Task<IActionResult> RegisterStudent([FromBody] StudentRegisterDto request)
@@ -110,9 +81,12 @@ namespace EduPulse.Models.Users
             {
                 var student = await _studentRegistrationService.RegisterAsync(request);
 
+                // Use the Singleton JwtTokenGenerator
+                var token = JwtTokenGenerator.GetInstance(_configuration).GenerateJwtToken(student);
+
                 var response = new
                 {
-                    Token = GenerateJwtToken(student),
+                    Token = token,
                     UserType = "Student",
                     UserId = student.Id,
                     Name = student.Name,
@@ -138,7 +112,8 @@ namespace EduPulse.Models.Users
         }
         #endregion
 
-        // Register Teacher
+
+        // Teacher Register
         #region
         [HttpPost("register/teacher")]
         public async Task<IActionResult> RegisterTeacher([FromBody] TeacherRegisterDto request)
@@ -152,9 +127,13 @@ namespace EduPulse.Models.Users
             {
                 var teacher = await _teacherRegistrationService.RegisterAsync(request);
 
-                var token = GenerateJwtToken(teacher);
+                // Use the Singleton JwtTokenGenerator
+                var token = JwtTokenGenerator.GetInstance(_configuration).GenerateJwtToken(teacher);
+                Console.WriteLine("✅ Preparing to notify teacher...");
 
                 await _notificationService.NotifyTeacherRegistered(teacher.Email, teacher.Name, teacher.Subject);
+
+                Console.WriteLine("✅ Email notification sent.");
 
                 return CreatedAtAction(nameof(Login), new
                 {
@@ -168,12 +147,15 @@ namespace EduPulse.Models.Users
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"❌ Error in registration: {ex.Message}");
                 return BadRequest(new { Message = ex.Message });
             }
         }
+       
+
         #endregion
 
-        // Register Parent
+        // Parent Register
         #region
         [HttpPost("register/parent")]
         public async Task<IActionResult> RegisterParent([FromBody] ParentRegisterDto request)
@@ -182,9 +164,10 @@ namespace EduPulse.Models.Users
             {
                 var parent = await _parentRegistrationService.RegisterAsync(request);
 
-                await _notificationService.NotifyParentRegistered(parent.Email, parent.Name);
+                // Use the Singleton JwtTokenGenerator
+                var token = JwtTokenGenerator.GetInstance(_configuration).GenerateJwtToken(parent);
 
-                var token = GenerateJwtToken(parent);
+                await _notificationService.NotifyParentRegistered(parent.Email, parent.Name);
 
                 return CreatedAtAction(nameof(Login), new
                 {
@@ -202,4 +185,3 @@ namespace EduPulse.Models.Users
         #endregion
     }
 }
-

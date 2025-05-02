@@ -26,5 +26,9 @@
     "environmentVariables": {
       "ASPNETCORE_ENVIRONMENT": "Development"
     }
+  },
+  "ExamSystem": {
+    "GoogleFormUrl": "https://forms.gle/your-default-form"
   }
+
 }

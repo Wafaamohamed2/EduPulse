@@ -1,4 +1,5 @@
 ﻿using EduPulse.Models.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace EduPulse.Models.Exam_Sub
 {
@@ -6,41 +7,44 @@ namespace EduPulse.Models.Exam_Sub
     {
         //Properties
         #region
-        public int Id { get; set; }
-        public string ExamName { get; set; }
-        public int TimeLimitInMinutes { get; set; }
-        public string? GoogleFormLink { get; set; }
-        public List<string> Questions { get; set; } = new List<string>();
-        public List<string> Answers { get; set; } = new List<string>();
-        public int QuestionsCount => Questions.Count;
-        #endregion
-        public string? examName { get; set; }
 
-         public Exam() { }
-        public Exam(string examname, int examtime)
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        public string ExamName { get; set; }
+
+        [Range(1, int.MaxValue)][Required]
+        public int TimeLimitInMinutes { get; set; }
+
+        [Required]
+        [Url]
+        public string GoogleFormLink { get; set; }
+
+        public DateTime DeadlineDate { get; set; }
+
+        // Foreign key to Teacher
+        public int? TeacherId { get; set; }
+        public Teacher? Creator { get; set; }
+        #endregion
+
+
+
+        public Exam() { }
+        public Exam(string examname, int examtime , string googleFormLink , DateTime deadLine, int teacherId)
         {
 
             ExamName = examname;
             TimeLimitInMinutes = examtime;
+            GoogleFormLink = googleFormLink;
+            DeadlineDate = deadLine;
+            TeacherId = teacherId;
         }
 
-
-
-        public void AddQuestion(string question, string answer)
+        // Method to check if the exam is expired based on the current date
+        public bool IsExamExpired()
         {
-            Questions.Add(question);
-            Answers.Add(answer);
-        }
-        public void RemoveQuestion(string question)
-        {
-            int index = Questions.IndexOf(question);
-            if (index > 0)
-            {
-                Questions.RemoveAt(index);
-                Answers.RemoveAt(index);  //remove the answer with the question
-            }
-
-
+            return DateTime.UtcNow > DeadlineDate.ToUniversalTime();
         }
 
 

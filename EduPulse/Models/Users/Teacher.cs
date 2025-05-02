@@ -49,15 +49,18 @@ namespace EduPulse.Models.Users
 
         // Teacher Methods
         #region
-        public Exam Create_Quiz(string examName, int ExameTime, List<(string Question, string Answer)> questionsWithAnswers)
+        public Exam Create_Quiz(string examName, int ExameTime, string googleFormLink, DateTime deadline)
         {
-            var exam = new Exam(examName, ExameTime);
-            foreach (var question in questionsWithAnswers)
+            var exam = new Exam
             {
-                exam.AddQuestion(question.Question, question.Answer);
-            }
+                ExamName = examName,
+                TimeLimitInMinutes = ExameTime,
+                GoogleFormLink = googleFormLink ,
+                DeadlineDate = deadline,
+                TeacherId = this.Id
+            };
 
-            Console.WriteLine($"Quiz {examName} created successfully with {exam.QuestionsCount} questions ");
+            Console.WriteLine($"Quiz {examName} created successfully with link to Google Form: {googleFormLink} and deadline: {deadline}");
             return exam;
         }
 
@@ -70,6 +73,9 @@ namespace EduPulse.Models.Users
 
 
         #endregion
+
+        // Exams created by this teacher
+        public ICollection<Exam> Exams { get; set; } = new List<Exam>();
 
         public ICollection<StudentSubject> StudentSubjects { get; set; } = new List<StudentSubject>();
     }

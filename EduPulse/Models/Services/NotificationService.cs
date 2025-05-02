@@ -6,7 +6,7 @@ namespace EduPulse.Models.Services
     {
         private readonly IEmailService _emailService;
 
-        public NotificationService(EmailService emailService)
+        public NotificationService(IEmailService emailService)
         {
             _emailService = emailService;
         }
@@ -19,6 +19,7 @@ namespace EduPulse.Models.Services
             string subjectLine = "Welcome to EduPulse 🎓";
             string body = $"<h3>Dear {name},</h3><p>Welcome to EduPulse! You've been successfully registered as a teacher for the {subject} subject. We are excited to have you on board! .. Let’s inspire and educate together! 🎓</p>"  +
                 $"<p>Best regards,<br>EduPulse Team</p>";
+
             await _emailService.SendEmailAsync(email, subjectLine, body);
         }
 

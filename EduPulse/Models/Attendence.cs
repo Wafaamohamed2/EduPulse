@@ -63,16 +63,16 @@ namespace SW_Project.Models
             var student = _context.Students.FirstOrDefault(s => s.FingerId == fingerId);
             if (student == null)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         #endregion
 
 
         // Method to calculate the attendance rate for a student
         #region
-        public double Attendance_Rate(string fingerId, DateTime startDate, DateTime endDate)
+        public double Absence_Rate(string fingerId, DateTime startDate, DateTime endDate)
         {
 
             var student = _context.Students.FirstOrDefault(s => s.FingerId == fingerId);

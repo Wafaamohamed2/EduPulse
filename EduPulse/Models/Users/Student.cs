@@ -75,43 +75,61 @@ namespace EduPulse.Models.Users
         #region
         public void Do_Quiz(Exam exam)
         {
-            Console.WriteLine($"Student {Name} is doing the quiz: {exam.ExamName}" +
-                $"Time Limit : {exam.TimeLimitInMinutes} minutes , Total questions: {exam.QuestionsCount} ");
+            // Redirect the student to the Google Form link for the exam
+            if (string.IsNullOrEmpty(exam.GoogleFormLink))
+            {
+                Console.WriteLine("No Google Form link available for this exam.");
+                return;
+            }
 
-
+            // In real implementation, you would generate a notification to inform the student
+            Console.WriteLine($"Student {Name} is doing the quiz: {exam.ExamName}. You have {exam.TimeLimitInMinutes} minutes.");
+            Console.WriteLine($"Please visit the following link to take the quiz: {exam.GoogleFormLink}");
+            Console.WriteLine("Once you've completed the quiz, you can view your results.");
 
 
         }
-        public int Preview_Quiz(Exam exam)
+        public async Task<int> Preview_Quiz(Exam exam)
         {
-            // Random grade just for testing
+            // Fetch the grade from Google Sheets (assuming it's stored after the quiz is completed)
+            if (string.IsNullOrEmpty(exam.GoogleFormLink))
+            {
+                Console.WriteLine("No Google Form link available for this exam.");
+                return -1; // Invalid grade
+            }
 
-            Random random = new Random();
-            int grade = random.Next(0, 100);
-            Console.WriteLine($"Student {Name} finished the quiz with grade: {grade} out of 100");
+            // Use the Google Sheets API to get the grade
+            int grade = await GoogleSheetsService.GetGradeFromGoogleSheet("your-spreadsheet-id", this.Id);
+
+            Console.WriteLine($"Student {Name} finished the quiz with grade: {grade} out of 100.");
+
+            // Save the grade in the database
+            await SaveExamResult(exam, grade);
 
             return grade;
         }
 
 
-        public void TakeExamFromDatabase(SW_Entity context, int examId)
+        private async Task SaveExamResult(Exam exam, int grade)
         {
-            var exam = context.Exams.FirstOrDefault(e => e.Id == examId);
-            if (exam == null)
+            // Save grade to the ExamResults table
+            Console.WriteLine($"Saving result for student {Name} in exam: {exam.ExamName} with grade: {grade}");
+
+            var result = new ExamResult
             {
-                Console.WriteLine("Exam not found.");
-                return;
-            }
-
-            Console.WriteLine($"Taking exam: {exam.ExamName}");
-            for (int i = 0; i < exam.Questions.Count; i++)
-            {
-                Console.WriteLine($"Question {i + 1}: {exam.Questions[i]}");
-
-            }
-
-            Console.WriteLine("Exam Finshed.");
+                StudentId = this.Id,
+                ExamId = exam.Id,
+                Grade = grade,
+                DateTaken = DateTime.Now
+            };
+            //// Save the result to the database (Example code)
+            //context.ExamResults.Add(result);
+            //await context.SaveChangesAsync();
         }
+
+
+
+
         #endregion
 
 

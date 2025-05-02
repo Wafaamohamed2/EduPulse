@@ -20,7 +20,7 @@ namespace SW_Project.Models
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<StudentSubject> StudentSubjects { get; set; }
         public DbSet<Exam> Exams { get; set; }
-
+        public DbSet<ExamResult> ExamResults { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StudentSubject>()

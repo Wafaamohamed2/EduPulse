@@ -3,6 +3,7 @@ using EduPulse.Models.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SW_Project.Models;
+using System.Security.Claims;
 
 
 namespace SW_Project.Controllers
@@ -42,7 +43,9 @@ namespace SW_Project.Controllers
                 TeacherId = request.TeacherId,
                 AttendenceDate = DateTime.Now,
                 IsPresent = request.IsPresent,
-                FingerId = request.FingerId
+                FingerId = request.FingerId,
+                StudentId = student.Id,
+
             };
 
             _context.AttendenceRecords.Add(attendance);
@@ -100,7 +103,25 @@ namespace SW_Project.Controllers
         #endregion
 
 
+        [HttpGet("AvailableExams")]
+        public async Task<IActionResult> GetAvailableExams()
+        {
+            
+            var studentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
 
+            var student = await _context.Students
+                .Include(s => s.Exams)
+                .FirstOrDefaultAsync(s => s.Id == studentId);
+
+            if (student == null)
+                return NotFound("Student not found");
+
+            var exams = await _context.Exams
+                .Where(e => !e.IsExamExpired())
+                .ToListAsync();
+
+            return Ok(exams);
+        }
 
 
 
