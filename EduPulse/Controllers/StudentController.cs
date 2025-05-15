@@ -1,12 +1,11 @@
-﻿
-using EduPulse.Models.Services;
+﻿using EduPulse.Models.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SW_Project.Models;
+using EduPulse.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
-
-namespace SW_Project.Controllers
+namespace EduPulse.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -123,7 +122,57 @@ namespace SW_Project.Controllers
             return Ok(exams);
         }
 
+        // New Endpoints Below
 
+        [HttpPost("set-fingerprint")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> SetFingerprint([FromBody] FingerprintRequest request)
+        {
+            if (string.IsNullOrEmpty(request.FingerprintData))
+                return BadRequest(new ApiResponse<object>(
+                    success: false,
+                    data: null,
+                    message: "Fingerprint data is required",
+                    statusCode: 400));
 
+            var studentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+                return NotFound(new ApiResponse<object>(
+                    success: false,
+                    data: null,
+                    message: "Student not found",
+                    statusCode: 404));
+
+            // Check if fingerprint ID already exists for another student
+            var existingFingerprint = await _context.Students
+                .AnyAsync(s => s.FingerId == request.FingerprintData && s.Id != studentId);
+                
+            if (existingFingerprint)
+                return BadRequest(new ApiResponse<object>(
+                    success: false,
+                    data: null,
+                    message: "This fingerprint is already registered to another student",
+                    statusCode: 400));
+
+            student.FingerId = request.FingerprintData;
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>(
+                success: true,
+                data: null,
+                message: "Fingerprint set successfully",
+                statusCode: 200));
+        }
+
+        public class FingerprintRequest
+        {
+            public string FingerprintData { get; set; } = string.Empty;
+        }
+
+      
+
+   
     }
 }

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using EduPulse.Models.Users;
 using EduPulse.Models.Exam_Sub;
-namespace SW_Project.Models
+using EduPulse.Models;
+
+namespace EduPulse.Models
 {
     public class SW_Entity : DbContext
     {
@@ -17,10 +19,12 @@ namespace SW_Project.Models
         public DbSet<Attendence> Attendances { get; set; }
         public DbSet<AttendenceRecord> AttendenceRecords { get; set; }
         public DbSet<Parent> Parents { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
+        public virtual DbSet<Teacher> Teachers { get; set; }
         public DbSet<StudentSubject> StudentSubjects { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<ExamResult> ExamResults { get; set; }
+        public DbSet<UserDevice> UserDevices { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StudentSubject>()

@@ -2,7 +2,7 @@
 using EduPulse.Models.Services;
 using EduPulse.Models.Users;
 using Microsoft.EntityFrameworkCore;
-using SW_Project.Models;
+using EduPulse.Models;
 
 namespace EduPulse.Models.Service_Registration
 {
@@ -31,7 +31,6 @@ namespace EduPulse.Models.Service_Registration
                 Name = request.Name,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                Confirm_Password = BCrypt.Net.BCrypt.HashPassword(request.Confirm_Password),
                 Subject = request.Subject
             };
 

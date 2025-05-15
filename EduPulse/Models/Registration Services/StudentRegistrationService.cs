@@ -1,7 +1,7 @@
 ﻿using EduPulse.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using EduPulse.Models.Users;
-using SW_Project.Models;
+using EduPulse.Models;
 using EduPulse.Models.Services;
 
 
@@ -35,8 +35,8 @@ namespace EduPulse.Models.Service_Registration
                 Name = request.Name,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                Confirm_Password = BCrypt.Net.BCrypt.HashPassword(request.Confirm_Password),
-                FingerId = request.FingerId
+                // FingerId مُعلق مؤقتًا
+                // FingerId = request.FingerId
             };
 
             _context.Students.Add(student);

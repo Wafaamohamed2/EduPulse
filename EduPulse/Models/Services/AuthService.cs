@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using SW_Project.Models;
+using EduPulse.Models;
 using EduPulse.Models.Users;
 
 namespace EduPulse.Services

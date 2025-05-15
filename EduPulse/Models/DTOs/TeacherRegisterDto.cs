@@ -18,9 +18,7 @@ namespace EduPulse.Models.DTOs
         public string? Password { get; set; }
 
 
-        [Required(ErrorMessage = "Confirm Password is required")]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
-        public string? Confirm_Password { get; set; }
+     
 
         [Required(ErrorMessage = "Subject is required")]
         public string? Subject { get; set; }

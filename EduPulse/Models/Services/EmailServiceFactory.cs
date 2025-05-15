@@ -3,10 +3,11 @@
     public class EmailServiceFactory : IEmailServiceFactory
     {
         private readonly IConfiguration _configuration;
-
-        public EmailServiceFactory(IConfiguration configuration)
+        private readonly ILogger<EmailService> _logger;
+        public EmailServiceFactory(IConfiguration configuration, ILogger<EmailService> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public IEmailService CreateEmailService()
@@ -15,7 +16,7 @@
 
             if (useSmtp)
             {
-                return new EmailService();  // Stmp
+                return new EmailService(_configuration, _logger);
             }
             else
             {

@@ -3,7 +3,7 @@
     public class ExamDto
     {
 
-        public int Id { get; set; }
+       
         public string ExamName { get; set; }
         public int TimeLimitInMinutes { get; set; }
         public string GoogleFormLink { get; set; }

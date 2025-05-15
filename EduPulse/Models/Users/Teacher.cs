@@ -1,5 +1,5 @@
 ﻿using EduPulse.Models.Exam_Sub;
-using SW_Project.Models;
+using EduPulse.Models;
 
 namespace EduPulse.Models.Users
 {
@@ -11,7 +11,8 @@ namespace EduPulse.Models.Users
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public string Confirm_Password { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string ProfilePictureUrl { get; set; } = string.Empty;
         public string Subject { get; set; } = string.Empty;
         #endregion
 
@@ -68,7 +69,6 @@ namespace EduPulse.Models.Users
         {
             context.Exams.Add(exam);
             context.SaveChanges();
-
         }
 
 

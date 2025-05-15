@@ -2,7 +2,7 @@
 using EduPulse.Models.Exam_Sub;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SW_Project.Models;
+using EduPulse.Models;
 using System.Security.Claims;
 
 namespace EduPulse.Controllers

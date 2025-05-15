@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace SW_Project.Models
+namespace EduPulse.Models
 {
     public class Attendence
     {
@@ -36,7 +36,7 @@ namespace SW_Project.Models
             var student = _context.Students.FirstOrDefault(s => s.FingerId == fingerId);
 
           
-                if (student == null)
+            if (student == null)
             {
                 Console.WriteLine("Student not found");
                 return;
@@ -50,7 +50,8 @@ namespace SW_Project.Models
 
             _context.AttendenceRecords.Add(record);
             _context.SaveChanges();
-
+            
+            Console.WriteLine($"Attendance recorded for student {student.Name}");
         }
         #endregion
 
@@ -85,8 +86,10 @@ namespace SW_Project.Models
             int totalDays = (int)(endDate - startDate).TotalDays + 1;
 
             // num of days student attended already
-            int presentDays = _context.AttendenceRecords.Count(r => r.StudentId == student.Id && r.AttendenceDate.Date >= startDate.Date &&
-            r.AttendenceDate.Date <= endDate.Date);
+            int presentDays = _context.AttendenceRecords.Count(r => r.StudentId == student.Id &&
+                                                        r.AttendenceDate.Date >= startDate.Date &&
+                                                        r.AttendenceDate.Date <= endDate.Date &&
+                                                        r.IsPresent == true);
 
             // calculate the attendance rate
             int absentDays = totalDays - presentDays;
